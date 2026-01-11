@@ -1,6 +1,7 @@
 import React from "react";
 import ExpenseSummary from "./ExpenseSummary";
 import ExpenseChart from "./ExpenseChart";
+import ExpenseForm from "./ExpenseForm";
 
 const Dashboard = () => {
   return (
@@ -14,8 +15,14 @@ const Dashboard = () => {
           <ExpenseChart />
         </div>
 
-        <div>{/* Expense Form */}</div>
+        <div>
+         {/* Expense Form */}
+         <ExpenseForm />
+         </div>
       </div>
+
+
+      
     </div>
   );
 };
