@@ -38,3 +38,55 @@ export const getExpensesByCategory = (expenses) => {
 };
 
 
+export const getChartData = (expenses) => {
+  const expensesByCategory = getExpensesByCategory(expenses);
+  return Object.entries(expensesByCategory)
+    .filter(([_, value]) => value > 0)
+    .map(([name, value]) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1),
+      value,
+    }));
+};
+
+export const getCategoryTextColor = (category) => {
+  const colors = {
+    food: "text-indigo-500",
+    transport: "text-cyan-500",
+    entertainment: "text-purple-500",
+    utilities: "text-teal-500",
+    health: "text-green-500",
+    shopping: "text-orange-500",
+    other: "text-slate-500",
+  };
+  return colors[category] || "text-gray-500";
+};
+
+export const getMonthName = (date) => {
+  return date.toLocaleString("default", { month: "long" });
+};
+
+export const getExpensesByMonth = (expenses, numMonths = 6) => {
+  const now = new Date();
+  const result = {};
+
+  for (let i = 0; i < numMonths; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthYear = `${getMonthName(d)} ${d.getFullYear()}`;
+    result[monthYear] = 0;
+  }
+
+  expenses.forEach((expense) => {
+    const expenseDate = new Date(expense.date);
+    const monthYear = `${getMonthName(
+      expenseDate
+    )} ${expenseDate.getFullYear()}`;
+
+    if (result[monthYear] !== undefined) {
+      result[monthYear] += expense.amount;
+    }
+  });
+
+  return result;
+};
+
+

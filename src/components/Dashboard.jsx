@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import ExpenseSummary from "./ExpenseSummary";
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
-  )
-}
+    <div className="space-y-8">
+      {/* Expense summary */}
+      <ExpenseSummary />
+    </div>
+  );
+};
 
-export default Dashboard
+export default Dashboard;

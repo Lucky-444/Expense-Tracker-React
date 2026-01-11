@@ -9,7 +9,7 @@ const initialState = {
 };
 
 const expenseReducer = (state, action) => {
-  switch ((action, type)) {
+  switch ((action.type)) {
     case "ADD EXPENSES":
       return { ...state, expenses: [...state.expenses, action.payload] };
     case "DELETE EXPENSES":
@@ -23,7 +23,7 @@ const expenseReducer = (state, action) => {
     case "UPDATE EXPENSES":
       return {
         ...state,
-        expenses: state.expense.map((expense) =>
+        expenses: state.expenses.map((expense) =>
           expense.id === action.payload.id ? action.payload : expense
         ),
       };
@@ -71,13 +71,13 @@ export const ExpenseProvider = ({ children }) => {
       };
 
       dispatch({
-        type: "ADD_EXPENSE",
+        type: "ADD_EXPENSES",
         payload: newExpense,
       });
     },
     deleteExpense: (id) => {
       dispatch({
-        type: "DELETE_EXPENSE",
+        type: "DELETE_EXPENSES",
         payload: { id },
       });
     },
@@ -87,7 +87,7 @@ export const ExpenseProvider = ({ children }) => {
   };
 
   return (
-    <ExpenseContext.Provider value={{ value }}>
+    <ExpenseContext.Provider value={ value }>
       {children}
     </ExpenseContext.Provider>
   );
