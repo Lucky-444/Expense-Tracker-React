@@ -93,7 +93,7 @@ export const ExpenseProvider = ({ children }) => {
   );
 };
 
-export const useExpense = () => {
+export const useExpenses = () => {
   const context = useContext(ExpenseContext);
   if (context === undefined) {
     throw new Error("useExpenses must be used within an ExpenseProvider");
