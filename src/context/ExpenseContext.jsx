@@ -3,43 +3,35 @@ import { createContext, useContext, useEffect, useReducer } from "react";
 const ExpenseContext = createContext();
 
 const initialState = {
-  expenses: [],
+  expenses: JSON.parse(localStorage.getItem("expenses")) || [],
   loading: false,
   error: null,
 };
 
 const expenseReducer = (state, action) => {
-  switch ((action.type)) {
-    case "ADD EXPENSES":
+  switch (action.type) {
+    case "ADD_EXPENSE":
       return { ...state, expenses: [...state.expenses, action.payload] };
-    case "DELETE EXPENSES":
+    case "DELETE_EXPENSE":
       return {
         ...state,
         expenses: state.expenses.filter(
           (expense) => expense.id !== action.payload.id
         ),
       };
-
-    case "UPDATE EXPENSES":
+    case "UPDATE_EXPENSE":
       return {
         ...state,
         expenses: state.expenses.map((expense) =>
           expense.id === action.payload.id ? action.payload : expense
         ),
       };
-
-    case "SET LOADING":
-      return {
-        ...state,
-        loading: action.payload,
-      };
-
-    case "SET ERROR":
-      return {
-        ...state,
-        err: action.payload,
-      };
-
+    case "SET_EXPENSES":
+      return { ...state, expenses: action.payload };
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
+    case "SET_ERROR":
+      return { ...state, error: action.payload };
     default:
       return state;
   }
@@ -48,17 +40,13 @@ const expenseReducer = (state, action) => {
 export const ExpenseProvider = ({ children }) => {
   const [state, dispatch] = useReducer(expenseReducer, initialState);
 
-  //save expense to localstorage
+  // save expenses to local storage whenever they change
   useEffect(() => {
     try {
-      localStorage.setItem("expense", JSON.stringify(state.expenses));
-    } catch (err) {
-      console.log("Failed To store expenses into Local Storage", err);
-
-      dispatch({
-        type: "SET ERROR",
-        payload: err,
-      });
+      localStorage.setItem("expenses", JSON.stringify(state.expenses));
+    } catch (error) {
+      console.error("Failed to save expenses to local storage: ", error);
+      dispatch({ type: "SET_ERROR", payload: error });
     }
   }, [state.expenses]);
 
@@ -69,17 +57,10 @@ export const ExpenseProvider = ({ children }) => {
         ...expense,
         id: crypto.randomUUID(),
       };
-
-      dispatch({
-        type: "ADD_EXPENSES",
-        payload: newExpense,
-      });
+      dispatch({ type: "ADD_EXPENSE", payload: newExpense });
     },
     deleteExpense: (id) => {
-      dispatch({
-        type: "DELETE_EXPENSES",
-        payload: { id },
-      });
+      dispatch({ type: "DELETE_EXPENSE", payload: { id } });
     },
     updateExpense: (expense) => {
       dispatch({ type: "UPDATE_EXPENSE", payload: expense });
@@ -87,9 +68,7 @@ export const ExpenseProvider = ({ children }) => {
   };
 
   return (
-    <ExpenseContext.Provider value={ value }>
-      {children}
-    </ExpenseContext.Provider>
+    <ExpenseContext.Provider value={value}>{children}</ExpenseContext.Provider>
   );
 };
 

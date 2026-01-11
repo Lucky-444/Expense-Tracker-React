@@ -16,13 +16,12 @@ const Dashboard = () => {
         </div>
 
         <div>
-         {/* Expense Form */}
-         <ExpenseForm />
-         </div>
+          {/* Expense Form */}
+          <ExpenseForm />
+        </div>
       </div>
 
-
-      
+      <ExpenseList />
     </div>
   );
 };
